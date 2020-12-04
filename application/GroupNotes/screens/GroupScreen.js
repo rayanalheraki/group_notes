@@ -13,12 +13,12 @@ import Constants from "expo-constants";
 import { Card, ListItem, Button, Icon ,Header } from 'react-native-elements'
 
 const names = [
-         {'name': 'Ben','desc':'this is group 1', 'id': 1 },
-         {'name': 'Susan','desc':'this is group 2', 'id': 2},
-         {'name': 'Robert','desc':'this is group 3', 'id': 3},
-         {'name': 'Mary', 'desc':'this is group 4','id': 4},
-         {'name': 'Daniel', 'desc':'this is group 5','id': 5},
-         {'name': 'Laura','desc':'this is group 6', 'id': 6},
+         {'name': 'Ben','desc':'this is Note 1', 'id': 1 },
+         {'name': 'Susan','desc':'this is Note 2', 'id': 2},
+         {'name': 'Robert','desc':'this is Note 3', 'id': 3},
+         {'name': 'Mary', 'desc':'this is Note 4','id': 4},
+         {'name': 'Daniel', 'desc':'this is Note 5','id': 5},
+         {'name': 'Laura','desc':'this is Note 6', 'id': 6},
   ];
 
   function renderItem({ item }) {
@@ -26,45 +26,52 @@ const names = [
   }
 
 
-export default function HomeScreen({navigation}) {
+export default function GroupScreen({navigation}) {
 
     return(
         <View style={styles.container}>
             
-            {/* <Header
-                placement="left"
-                leftComponent={{ icon: 'menu', color: '#fff' }}
-                centerComponent={{ text: 'MY TITLE', style: { color: '#fff' } }}
-                rightComponent={{ icon: 'home', color: '#fff' }}
-            /> */}
+            <Button
+                    onPress={()=>navigation.navigate('joinGroup') }
+                    buttonStyle={{
+                        backgroundColor:'#2b2e4a',
+                        marginTop:10,
+                        marginLeft:12,
+                        marginRight:12,
+                        marginBottom:0,
+                        height:70,
+                    }}
+                    icon={{
+                        size: 15,
+                        color: "white",
+                        name:'sticky-note',
+                        type:'font-awesome',
+                    }}
+                    title="Add New Note"
+                />
             <ScrollView > 
                {
                 names.map((item, index) => (
-                    // <View key = {item.id} style = {styles.item}>
-                    //     <Pressable >
-                    //         <Text style={styles.text}>{item.name}</Text>
-                    //     </Pressable>
-                    // </View>
+                    
                     <Card key = {item.id} containerStyle={{marginBottom:-10 }}>
-                        <Card.Title style={styles.title}>{item.name}</Card.Title>
-                        <Card.Divider/>
-                            <Text style={styles.text}>
-                             {item.desc}
-                            </Text>
+                        
+                        <Text style={styles.text}>
+                            {item.desc}
+                        </Text>
                         <View style={{alignItems:'flex-end'}}>
                             
                             <Button
-                                onPress={()=> navigation.navigate('groupScreen')}
+                                onPress={()=>navigation.navigate('note')}
                                 buttonStyle={{margin:0 , borderRadius:100 , width:50 ,  backgroundColor:'#2b2e4a'}}
                                 titleStyle={{ color:'white', fontSize:15}}
                                 type="solid"
                                 icon={{
                                     size: 15,
                                     color: "white",
-                                    name:'chevron-right',
+                                    name:'pencil',
                                     type:'font-awesome',
                                 }}
-                                />
+                            />
                         </View>
                         
                     </Card>

@@ -1,49 +1,64 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-
 import { StyleSheet, Text, View ,Button,TouchableOpacity} from 'react-native';
 import 'react-native-gesture-handler';
 import { Card, ListItem ,Icon } from 'react-native-elements'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'; 
 import HomeScreen from './screens/HomeScreen';
+import GroupOp  from './screens/GroupOp';
+import CreateGroup  from './screens/CreateGroup';
 import JoinGroup  from './screens/JoinGroup';
-import NewGroup   from './screens/NewGroup';
-
+import GroupScreen from './screens/GroupScreen';
+import Note from './components/Note';
 
 const Stack = createStackNavigator();
 
 
 export default function App() {
   return (
-    <NavigationContainer >
-      <Stack.Navigator>
-        <Stack.Screen 
-          name="HomeScreen" 
-          backgroundColor="red"
-          component={HomeScreen}
-          options={{
+    <NavigationContainer  >
+      <Stack.Navigator
+          initialRouteName="HomeScreen"
+
+          screenOptions={{
             headerStyle: {
-              backgroundColor: '#e84545',
+            backgroundColor: '#e84545',
             },
             //header text color
             headerTintColor: '#fff',
             headerTitleStyle: {
               fontWeight: 'bold',
             },
-            headerTitle: "Ana Sayafa",
-            headerRight: () => (
-              <View style={{flexDirection: "row",justifyContent: "flex-end",marginRight:15, width: 120}} >
-                <TouchableOpacity
-                  style={styles.button}
-                  onPress={() => alert('This is a button!')}
-                  >
-                   <Text style={styles.text}>+</Text>
-                </TouchableOpacity>
-              </View>
-            ),
-          }}
+          }} 
+        
+        >
+        
+        <Stack.Screen 
+          name="HomeScreen" 
+          backgroundColor="red"
+          component={HomeScreen}
+          options={({ navigation }) =>({
+          
+          headerTitle: "Home",
+          headerRight: () => (
+            <View style={{flexDirection: "row",justifyContent: "flex-end",marginRight:15, width: 120}} >
+              
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => navigation.navigate('newGroup')}
+              >
+                 <Text style={styles.text}>+</Text>
+              </TouchableOpacity>
+            </View>
+          ),
+        })}
         />
+        <Stack.Screen name="newGroup" component={GroupOp} options={() =>({headerTitle: "New Group"}) }/>
+        <Stack.Screen name="createGroup" component={CreateGroup} options={() =>({headerTitle: "Create Group"}) } />
+        <Stack.Screen name="joinGroup" component={JoinGroup}  options={() =>({headerTitle: "Join To Group"}) }/>
+        <Stack.Screen name="groupScreen" component={GroupScreen}  options={() =>({headerTitle: "Group Screen"}) }/>
+        <Stack.Screen name="note" component={Note}  options={() =>({headerTitle: "Group Screen"}) }/>
       </Stack.Navigator>
     </NavigationContainer>
   );

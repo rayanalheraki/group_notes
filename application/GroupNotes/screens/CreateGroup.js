@@ -4,32 +4,32 @@ import 'react-native-gesture-handler';
 import {Button, Icon ,Header,Input } from 'react-native-elements'
 
 
-export default function JoinGroup(){
+export default function CreateGroup(){
     return(
         <View style={styles.container}>
             <View style={styles.form}>
-
+                <Input
+                    placeholder='Group Name'
+                />
                 <Input
                     placeholder='Group Id'
                 />
                 <Input
                     placeholder='Group Code'
                 />
-                <Button
-                    onPress={()=>navigation.navigate('joinGroup') }
+                <Button 
+                    // onPress={()=> }
                     buttonStyle={{
                         backgroundColor:'#2b2e4a',
                         margin:10,
-                        height:70,
-                        width:200,
                     }}
                     icon={{
                         size: 15,
-                        color: "white",
-                        name:'sign-in',
+                        color:"white",
+                        name:'plus',
                         type:'font-awesome',
                     }}
-                    title="Join To Group"
+                    title="Create New Group"
                 />
             </View>
             
