@@ -1,16 +1,22 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { 
-    StyleSheet, Pressable,FlatList,
-     Text, 
-     View,
-     ScrollView} from 'react-native';
+import React, { useState } from 'react';
+import {StyleSheet, Text,View, ScrollView} from 'react-native';
 import 'react-native-gesture-handler';
-import { NavigationContainer } from '@react-navigation/native'
-import { createStackNavigator } from '@react-navigation/stack'; 
-import Group from '../components/Group';
-import Constants from "expo-constants";
-import { Card, ListItem, Button, Icon ,Header } from 'react-native-elements'
+import { Card, ListItem, Button, Icon ,Header } from 'react-native-elements';
+import firebase from '../firebase-connect/firebaseConf';
+
+
+
+var database = firebase.database();
+var db1= firebase.database().ref('notes/group1')
+
+var test=''
+db1.on('value', datasnap => {
+    test =Object.values(datasnap.val())
+
+});
+          
+
 
 const names = [
          {'name': 'Ben','desc':'this is group 1', 'id': 1 },
@@ -27,10 +33,9 @@ const names = [
 
 
 export default function HomeScreen({navigation}) {
-
+    
     return(
         <View style={styles.container}>
-            
             {/* <Header
                 placement="left"
                 leftComponent={{ icon: 'menu', color: '#fff' }}

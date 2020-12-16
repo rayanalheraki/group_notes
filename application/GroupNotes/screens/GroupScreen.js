@@ -1,38 +1,76 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React,{ useState,useEffect} from 'react';
 import { 
     StyleSheet, Pressable,FlatList,
      Text, 
      View,
      ScrollView} from 'react-native';
 import 'react-native-gesture-handler';
-import { NavigationContainer } from '@react-navigation/native'
-import { createStackNavigator } from '@react-navigation/stack'; 
-import Group from '../components/Group';
-import Constants from "expo-constants";
-import { Card, ListItem, Button, Icon ,Header } from 'react-native-elements'
-
-const names = [
-         {'name': 'Ben','desc':'this is Note 1', 'id': 1 },
-         {'name': 'Susan','desc':'this is Note 2', 'id': 2},
-         {'name': 'Robert','desc':'this is Note 3', 'id': 3},
-         {'name': 'Mary', 'desc':'this is Note 4','id': 4},
-         {'name': 'Daniel', 'desc':'this is Note 5','id': 5},
-         {'name': 'Laura','desc':'this is Note 6', 'id': 6},
-  ];
-
-  function renderItem({ item }) {
-  return <Text>{item}</Text>;
-  }
+import { Card, ListItem, Button, Icon ,Header } from 'react-native-elements';
+import firebase from '../firebase-connect/firebaseConf';
 
 
-export default function GroupScreen({navigation}) {
 
+
+export default function GroupScreen({route , navigation}) {
+    const { groupId, groupCode } = route.params;
+    const [notes, setNotes] = useState([]);
+    //const [notNull, setNotNull] = useState(false);
+    const [notesPlus , setNotePlus] = useState([]);
+   // const [keys , setKeys]= useState(null);
+    const [render, setRender] = useState(0);
+
+    useEffect(() => {
+        
+        const Notes = firebase.database()
+        .ref(`/notes/${groupId}`)
+        .on('value', snapshot => {
+            const myData=snapshot.val();
+            const keys = Object.keys(myData);
+            const array=[];
+            if(myData!= null)
+            {
+                //console.log("my data : "+myData )
+               // setKeys(Object.keys(myData))
+                Object.values(myData).map((item,index)=>{
+                    
+                    if(keys!==null){
+                        console.log(item, index)
+                        array.push({
+                            id:keys[index],
+                            text:item.noteText,
+                            title:item.noteTitle,
+                        })
+                        //console.log(array)
+
+                    }
+                }
+                )
+                
+                setNotePlus(array)
+                //console.log("array  : "+ JSON.stringify(array));
+                //console.log("keys : "+Object.keys(myData).forEach(data=>array.push(myData[data])  ));
+                
+                setNotes( Object.values(myData) );
+                
+            }
+        });
+        return () =>
+        firebase.database()
+            .ref(`/notes/${groupId}`)
+            .off('child_added', Notes);
+
+    },[]);
+
+      console.log(notesPlus)
+      console.log("notes :");
     return(
         <View style={styles.container}>
             
             <Button
-                    onPress={()=>navigation.navigate('joinGroup') }
+                    onPress={()=>navigation.navigate('note',{
+                        groupId:groupId,
+                    }) }    
                     buttonStyle={{
                         backgroundColor:'#2b2e4a',
                         marginTop:10,
@@ -47,21 +85,28 @@ export default function GroupScreen({navigation}) {
                         name:'sticky-note',
                         type:'font-awesome',
                     }}
-                    title="Add New Note"
+                    title="  Add New Note  "
                 />
             <ScrollView > 
+               
                {
-                names.map((item, index) => (
-                    
-                    <Card key = {item.id} containerStyle={{marginBottom:-10 }}>
+                notesPlus.map((item, index) => (
+                     
+                    <Card key = {index} containerStyle={{marginBottom:-10 }}>
                         
+                        <Card.Title style={{textAlign:'left'}}> {item.title}</Card.Title>
+                        <Card.Divider/>
+
                         <Text style={styles.text}>
-                            {item.desc}
+                            {item.noteText}
                         </Text>
                         <View style={{alignItems:'flex-end'}}>
                             
                             <Button
-                                onPress={()=>navigation.navigate('note')}
+                                onPress={()=>navigation.navigate('noteEdit',{
+                                    groupId:groupId,
+                                    noteId:item.id,
+                                })}
                                 buttonStyle={{margin:0 , borderRadius:100 , width:50 ,  backgroundColor:'#2b2e4a'}}
                                 titleStyle={{ color:'white', fontSize:15}}
                                 type="solid"
@@ -76,8 +121,9 @@ export default function GroupScreen({navigation}) {
                         
                     </Card>
                 ))
-               }
-            </ScrollView>
+            
+            }
+            </ScrollView> 
 
             {/* <View
                 style={styles.group}

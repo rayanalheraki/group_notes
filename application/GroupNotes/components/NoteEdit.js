@@ -5,32 +5,35 @@ import {  Button, Icon  } from 'react-native-elements'
 
 import firebase from '../firebase-connect/firebaseConf';
 
-function saveNote(title , text, groupId){
-    var noteData = {
-        noteText: text,
-        noteTitle: title,
-      };
+// function saveNote(title , text, groupId){
+//     var noteData = {
+//         noteText: text,
+//         noteTitle: title,
+//       };
     
-      // Get a key for a new Post.
-      var newPostKey = firebase.database().ref().child(`notes/${groupId}`).push().key;
+//       // Get a key for a new Post.
+//       var newPostKey = firebase.database().ref().child(`notes/${groupId}`).push().key;
     
-      // Write the new post's data simultaneously in the posts list and the user's post list.
-      var updates = {};
-      updates[`/notes/${groupId}/` + newPostKey] = noteData;
-      //updates['/user-posts/' + uid + '/' + newPostKey] = noteData;
+//       // Write the new post's data simultaneously in the posts list and the user's post list.
+//       var updates = {};
+//       updates[`/notes/${groupId}/` + newPostKey] = noteData;
+//       //updates['/user-posts/' + uid + '/' + newPostKey] = noteData;
     
-      return firebase.database().ref().update(updates);
+//       return firebase.database().ref().update(updates);
 
-}
+// }
 
 
 export default function Note({route , navigation}) {
-    const { groupId } = route.params;
+    const { groupId,noteId } = route.params;
+    const [value , setValue] = useState(" ")
     const [noteTitle ,setNoteTitle] = useState('');
     const [noteText  ,setNoteText ] = useState('');
+
+    console.log(" note id "+noteId )
     return(
         <View style={styles.container}>
-            <Text style={styles.title} > New Note</Text>
+            <Text style={styles.title} > Edit Your Note</Text>
             <View style={styles.noteTitle} >
                 <TextInput
                     // style={styles.textArea}
@@ -50,12 +53,21 @@ export default function Note({route , navigation}) {
                 />
             </View>
             <View style={styles.opir}>
-               
                 <Button
-                    onPress={()=> {
-                        saveNote(noteTitle,noteText,groupId);
-                        navigation.goBack();
+                    // onPress={()=> saveNote(noteTitle,noteText,groupId)}
+                    buttonStyle={{margin:5 , borderRadius:100 ,width:100,  backgroundColor:'#2b2e4a'}}
+                    titleStyle={{ color:'white', fontSize:15}}
+                    type="solid"
+                    title=" Delete "
+                    icon={{
+                        size: 15,
+                        color: "white",
+                        name:'trash-o',
+                        type:'font-awesome',
                     }}
+                />
+                <Button
+                    // onPress={()=> saveNote(noteTitle,noteText,groupId)}
                     buttonStyle={{margin:5 , borderRadius:100 ,width:100,  backgroundColor:'#2b2e4a'}}
                     titleStyle={{ color:'white', fontSize:15}}
                     type="solid"

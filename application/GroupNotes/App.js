@@ -1,8 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React ,{useState } from 'react';
 import { StyleSheet, Text, View ,Button,TouchableOpacity} from 'react-native';
 import 'react-native-gesture-handler';
-import { Card, ListItem ,Icon } from 'react-native-elements'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'; 
 import HomeScreen from './screens/HomeScreen';
@@ -11,6 +10,7 @@ import CreateGroup  from './screens/CreateGroup';
 import JoinGroup  from './screens/JoinGroup';
 import GroupScreen from './screens/GroupScreen';
 import Note from './components/Note';
+import NoteEdit from './components/NoteEdit';
 
 const Stack = createStackNavigator();
 
@@ -58,7 +58,8 @@ export default function App() {
         <Stack.Screen name="createGroup" component={CreateGroup} options={() =>({headerTitle: "Create Group"}) } />
         <Stack.Screen name="joinGroup" component={JoinGroup}  options={() =>({headerTitle: "Join To Group"}) }/>
         <Stack.Screen name="groupScreen" component={GroupScreen}  options={() =>({headerTitle: "Group Screen"}) }/>
-        <Stack.Screen name="note" component={Note}  options={() =>({headerTitle: "Group Screen"}) }/>
+        <Stack.Screen name="note" component={Note}  options={() =>({headerTitle: "New Note Screen"}) }/>
+        <Stack.Screen name="noteEdit" component={NoteEdit}  options={()=>({headerTitle: "Edit Note Screen"}) }/>
       </Stack.Navigator>
     </NavigationContainer>
   );
