@@ -1,60 +1,73 @@
 import { StatusBar } from 'expo-status-bar';
 import React , {useState , useEffect}from 'react';
-import { StyleSheet, Text, View,TextInput } from 'react-native';
+import { StyleSheet, Text, View,TextInput, Alert } from 'react-native';
 import {  Button, Icon  } from 'react-native-elements'
 
 import firebase from '../firebase-connect/firebaseConf';
 
-// function saveNote(title , text, groupId){
+// function saveNote(title , text, noteId, groupId){
 //     var noteData = {
 //         noteText: text,
 //         noteTitle: title,
 //       };
-    
-//       // Get a key for a new Post.
-//       var newPostKey = firebase.database().ref().child(`notes/${groupId}`).push().key;
-    
-//       // Write the new post's data simultaneously in the posts list and the user's post list.
-//       var updates = {};
-//       updates[`/notes/${groupId}/` + newPostKey] = noteData;
-//       //updates['/user-posts/' + uid + '/' + newPostKey] = noteData;
-    
-//       return firebase.database().ref().update(updates);
-
+//     // Write the new post's data simultaneously in the posts list and the user's post list.
+//     var updates = {};
+//     updates[`/notes/${groupId}/${noteId}/`] = noteData;
+//     return firebase.database().ref().update(updates)
+   
 // }
 
 
 export default function Note({route , navigation}) {
-    const { groupId,noteId } = route.params;
-    const [value , setValue] = useState(" ")
-    const [noteTitle ,setNoteTitle] = useState('');
-    const [noteText  ,setNoteText ] = useState('');
+    const { groupId,noteId, noteText,noteTitle } = route.params;
+    const [title ,setTitle] = useState(noteTitle);
+    const [text  ,setText ] = useState(noteText);
 
-    console.log(" note id "+noteId )
+    const saveNote= ()=>{
+        var noteData = {
+            noteText: text,
+            noteTitle: title,
+          };
+        var updates = {};
+        updates[`/notes/${groupId}/${noteId}/`] = noteData;
+        firebase.database().ref().update(updates)
+
+        navigation.goBack();
+        Alert.alert('Done','Note was saved')
+    }
+
+    const DeleteNote = ()=>{
+        firebase.database().ref(`/notes/${groupId}/${noteId}/`).remove()
+        navigation.goBack();
+        Alert.alert('Done','Note was deleted')
+    } 
+
     return(
         <View style={styles.container}>
             <Text style={styles.title} > Edit Your Note</Text>
             <View style={styles.noteTitle} >
                 <TextInput
                     // style={styles.textArea}
-                    placeholder="Type something"
-                    onChangeText={value => setNoteTitle(value)}
+                    placeholder="Type note title"
+                    value={title}
+                    onChangeText={value => setTitle(value)}
                     editable={true}
                 />
             </View>
             <View style={styles.textAreaContainer} >
                 <TextInput
                     style={styles.textArea}
-                    placeholder="Type something"
+                    placeholder="Type note text"
                     multiline={true}
                     numberOfLines={20}
-                    onChangeText={value => setNoteText(value)}
+                    value={text}
+                    onChangeText={value => setText(value)}
                     editable={true}
                 />
             </View>
             <View style={styles.opir}>
                 <Button
-                    // onPress={()=> saveNote(noteTitle,noteText,groupId)}
+                    onPress={DeleteNote}
                     buttonStyle={{margin:5 , borderRadius:100 ,width:100,  backgroundColor:'#2b2e4a'}}
                     titleStyle={{ color:'white', fontSize:15}}
                     type="solid"
@@ -67,7 +80,7 @@ export default function Note({route , navigation}) {
                     }}
                 />
                 <Button
-                    // onPress={()=> saveNote(noteTitle,noteText,groupId)}
+                    onPress={saveNote}
                     buttonStyle={{margin:5 , borderRadius:100 ,width:100,  backgroundColor:'#2b2e4a'}}
                     titleStyle={{ color:'white', fontSize:15}}
                     type="solid"
@@ -107,7 +120,7 @@ const styles = StyleSheet.create({
         borderColor: 'black',
         borderWidth: 1,
         marginBottom:10,
-
+        padding: 10,
     },
     textArea: {
         height: 150,

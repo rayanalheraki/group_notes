@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet ,  View,} from 'react-native';
+import { StyleSheet ,  View,Alert} from 'react-native';
 import 'react-native-gesture-handler';
 import {Button,Input } from 'react-native-elements'
 import firebase from '../firebase-connect/firebaseConf';
@@ -10,6 +10,29 @@ import firebase from '../firebase-connect/firebaseConf';
 export default function JoinGroup({ navigation}){
     const [groupId , setGroupId] = useState(null);
     const [code , setCode] = useState(null);
+
+    const GoToGroup= ()=>{
+        if(groupId=== null || code===null){
+            Alert.alert('Sorry', 'Please enter the data correctly');
+        }else{
+            firebase.database()
+                .ref(`/groups/${groupId.toLowerCase()}/GroupCode`)
+                .on('value', snapshot => {
+                    if(snapshot.val()=== null){
+                        Alert.alert('Sorry', 'This ID is not used');
+                    }else if(snapshot.val()==code)
+                    {
+                        navigation.navigate('groupScreen', {
+                            groupId : groupId.toLowerCase(),
+                            groupCode:code,
+                        })
+                    }else if(snapshot.val()!==code){
+                        Alert.alert('Sorry', 'Wrong code');
+                    }
+                })
+        }
+        
+    }
 
     return(
         <View style={styles.container}>
@@ -25,21 +48,7 @@ export default function JoinGroup({ navigation}){
 
                 />
                 <Button
-                    onPress={()=> {
-                        firebase.database()
-                        .ref(`/groups/${groupId.toLowerCase()}/GroupCode`)
-                        .on('value', snapshot => {  
-                            console.log(">>>"+snapshot.val() )
-                            if(snapshot.val()==code)
-                            {
-                                navigation.navigate('groupScreen', {
-                                    groupId : groupId.toLowerCase(),
-                                    groupCode:code,
-                                })
-                            }
-                        })
-                        }
-                            }
+                    onPress={GoToGroup }
 
                     buttonStyle={{
                         backgroundColor:'#2b2e4a',

@@ -1,8 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
 import {StyleSheet, Text,View, ScrollView} from 'react-native';
 import 'react-native-gesture-handler';
-import { Card, ListItem, Button, Icon ,Header } from 'react-native-elements';
+import { Card, Button } from 'react-native-elements';
 import firebase from '../firebase-connect/firebaseConf';
 
 
@@ -27,21 +27,53 @@ const names = [
          {'name': 'Laura','desc':'this is group 6', 'id': 6},
   ];
 
-  function renderItem({ item }) {
-  return <Text>{item}</Text>;
-  }
-
 
 export default function HomeScreen({navigation}) {
-    
+    // const { groupId, groupCode } = route.params;
+    // const [notesPlus , setNotePlus] = useState([]);
+    // const [notNull , setNotNull] =useState(false)
+    // const [count , setCount] =useState(0)
+
+    // useEffect(() => {
+    //     setCount(val=> val=val+1)
+    //     console.log(count,'-------------------------------')
+        
+    //     const Notes = firebase.database()
+    //     .ref(`/notes/${groupId}`)
+    //     .on('value', snapshot => {
+    //         const myData=snapshot.val();
+            
+    //         const array=[];
+    //         if(myData!= null)
+    //         {
+    //             const keys = Object.keys(myData);
+    //             Object.values(myData).map((item,index)=>{
+    //                 if(keys!==null){
+    //                     array.push({
+    //                         id:keys[index],
+    //                         text:item.noteText,
+    //                         title:item.noteTitle,
+    //                     })
+    //                 }
+    //             }
+    //             )
+    //             setNotePlus(array)
+    //             setNotNull(true)
+    //         }
+    //         else{
+    //             setNotNull(false)
+    //         }
+    //     },[]);
+    //     return () => firebase.database()
+    //         .ref(`/notes/${groupId}`)
+    //         .off('child_added', Notes);
+            
+
+    // },[]);
+
     return(
         <View style={styles.container}>
-            {/* <Header
-                placement="left"
-                leftComponent={{ icon: 'menu', color: '#fff' }}
-                centerComponent={{ text: 'MY TITLE', style: { color: '#fff' } }}
-                rightComponent={{ icon: 'home', color: '#fff' }}
-            /> */}
+            
             <ScrollView > 
                {
                 names.map((item, index) => (
