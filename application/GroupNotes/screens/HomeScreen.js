@@ -5,93 +5,94 @@ import 'react-native-gesture-handler';
 import { Card, Button } from 'react-native-elements';
 import firebase from '../firebase-connect/firebaseConf';
 
+import { useIsFocused } from '@react-navigation/native';
 
+import * as SQLite from 'expo-sqlite';
 
-var database = firebase.database();
-var db1= firebase.database().ref('notes/group1')
+const db = SQLite.openDatabase('groupNotes.db');
 
-var test=''
-db1.on('value', datasnap => {
-    test =Object.values(datasnap.val())
-
-});
-          
-
-
-const names = [
-         {'name': 'Ben','desc':'this is group 1', 'id': 1 },
-         {'name': 'Susan','desc':'this is group 2', 'id': 2},
-         {'name': 'Robert','desc':'this is group 3', 'id': 3},
-         {'name': 'Mary', 'desc':'this is group 4','id': 4},
-         {'name': 'Daniel', 'desc':'this is group 5','id': 5},
-         {'name': 'Laura','desc':'this is group 6', 'id': 6},
-  ];
 
 
 export default function HomeScreen({navigation}) {
-    // const { groupId, groupCode } = route.params;
-    // const [notesPlus , setNotePlus] = useState([]);
-    // const [notNull , setNotNull] =useState(false)
-    // const [count , setCount] =useState(0)
-
-    // useEffect(() => {
-    //     setCount(val=> val=val+1)
-    //     console.log(count,'-------------------------------')
+    const [items, setItems]= useState([])
+    const [notNull , setNotNull] =useState(false)
+    const [update, setUpdate]= useState(false)
+    const isFocused = useIsFocused();
+    useEffect(() => {
         
-    //     const Notes = firebase.database()
-    //     .ref(`/notes/${groupId}`)
-    //     .on('value', snapshot => {
-    //         const myData=snapshot.val();
-            
-    //         const array=[];
-    //         if(myData!= null)
-    //         {
-    //             const keys = Object.keys(myData);
-    //             Object.values(myData).map((item,index)=>{
-    //                 if(keys!==null){
-    //                     array.push({
-    //                         id:keys[index],
-    //                         text:item.noteText,
-    //                         title:item.noteTitle,
-    //                     })
-    //                 }
-    //             }
-    //             )
-    //             setNotePlus(array)
-    //             setNotNull(true)
-    //         }
-    //         else{
-    //             setNotNull(false)
-    //         }
-    //     },[]);
-    //     return () => firebase.database()
-    //         .ref(`/notes/${groupId}`)
-    //         .off('child_added', Notes);
-            
+        db.transaction(tx=>{
+            tx.executeSql(
+                `SELECT * FROM GroupNotes;`,
+                null,
+                (_, { rows: {length, _array } }) => {
+                    if(_array!==null){
+                        setNotNull(true)
+                        setItems(_array )
+                    }else{
+                        setNotNull(false)
+                    }
 
-    // },[]);
+                    
+                }
+            );
+        });
+        
+    },[isFocused,update]);
+
+    const GoToGroup=  (groupId ,code)=>{
+       
+        if(groupId=== null || code===null){
+            Alert.alert('Sorry', 'Please enter the data correctly');
+        }else{
+            firebase.database()
+                .ref(`/groups/${groupId.toLowerCase()}/GroupCode`)
+                .on('value', snapshot => {
+                    if(snapshot.val()=== null){
+                        Alert.alert('Sorry', 'This ID is not used');
+                    }else if(snapshot.val()==code)
+                    {   
+                        navigation.navigate('groupScreen', {
+                            groupId : groupId.toLowerCase(),
+                            groupCode:code,
+                        })
+
+                    }else if(snapshot.val()!==code){
+                        Alert.alert('Sorry', 'Wrong code');
+                    }
+                })
+        }
+        
+    }
+    
+    
+
 
     return(
+        
         <View style={styles.container}>
-            
+            {/* {!notNull &&(
+                <Text style={styles.text}>
+                    no items
+                </Text>
+
+            )} */}
             <ScrollView > 
                {
-                names.map((item, index) => (
-                    // <View key = {item.id} style = {styles.item}>
-                    //     <Pressable >
-                    //         <Text style={styles.text}>{item.name}</Text>
-                    //     </Pressable>
-                    // </View>
+                items.map((item, index) => (
+                    
                     <Card key = {item.id} containerStyle={{marginBottom:-10 }}>
-                        <Card.Title style={styles.title}>{item.name}</Card.Title>
+                        <Card.Title style={styles.title}>{item.groupName}</Card.Title>
                         <Card.Divider/>
-                            <Text style={styles.text}>
-                             {item.desc}
-                            </Text>
-                        <View style={{alignItems:'flex-end'}}>
+                            {/* <Text style={styles.text}>
+                                {item.GroupId}
+                            </Text> */}
+                        <View style={{alignItems:'flex-end',flexDirection: 'row',justifyContent: 'space-between' }}>
                             
                             <Button
-                                onPress={()=> navigation.navigate('groupScreen')}
+                                onPress={()=> navigation.navigate('groupScreen', {
+                                    groupId : item.GroupId,
+                                    groupCode:null,
+                                })}
                                 buttonStyle={{margin:0 , borderRadius:100 , width:50 ,  backgroundColor:'#2b2e4a'}}
                                 titleStyle={{ color:'white', fontSize:15}}
                                 type="solid"
@@ -102,22 +103,37 @@ export default function HomeScreen({navigation}) {
                                     type:'font-awesome',
                                 }}
                                 />
+                            <Button
+                                onPress={()=> {
+                                    db.transaction(tx=>{
+                                        tx.executeSql(
+                                            `DELETE FROM GroupNotes WHERE id=${item.id};`);
+                                    });
+                                    if(update===true)
+                                    {
+                                        setUpdate(false)
+                                    }else{
+                                        setUpdate(true)
+                                    }
+                                // window.location.reload(true);
+                                }}
+                                buttonStyle={{margin:0 , borderRadius:100 , width:50 ,  backgroundColor:'#2b2e4a'}}
+                                titleStyle={{ color:'white', fontSize:15}}
+                                type="solid"
+                                icon={{
+                                    size: 15,
+                                    color: "white",
+                                    name:'trash-o',
+                                    type:'font-awesome',
+                                }}
+                                />
                         </View>
                         
                     </Card>
-                ))
+                            ))
                }
             </ScrollView>
 
-            {/* <View
-                style={styles.group}
-                onPress={() => alert('This is a button!')}
-                >
-                <Text style={styles.text}>
-                    helllo from HomeScreen
-                    
-                </Text>
-            </View> */}
         </View>
     );
 }
@@ -140,6 +156,13 @@ const styles = StyleSheet.create({
     text: {
         marginBottom: 10,
         
+    },
+    noGroup:{
+        alignItems:'center',
+        margin: 5,
+        backgroundColor:'#a6e3e9',
+        height:150,
+        textAlign:'center',
     },
     title: {
         color: '#e84545',

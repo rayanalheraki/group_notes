@@ -1,69 +1,86 @@
 
 import 'react-native-gesture-handler';
-import {Button,Input ,Icon} from 'react-native-elements';
+import {Button,Input} from 'react-native-elements';
 import firebase from '../firebase-connect/firebaseConf';
 import 'react-native-gesture-handler';
 import React, { useState } from 'react';
 import { StyleSheet, View, Alert ,Text} from 'react-native';
+import NetInfo from "@react-native-community/netinfo";
 
+import * as SQLite from 'expo-sqlite';
 
+const db = SQLite.openDatabase('groupNotes.db');
 
 
 export default function CreateGroup({navigation}){
     const [groupId , setGroupId] = useState(null);
     const [name , setName] = useState(null);
     const [code , setCode] = useState(null);
-    const [wrongName, setWrongName] =useState('');
+    
 
-    // firebase.database().ref("groups/").equalTo(groupId).once("value",snapshot => {
-    //     if (snapshot.exists()){
-    //       const userData = snapshot.val();
-    //       console.log("---------------exists!", userData); 
-    //     }
-    // });
-
-    const NewGroup = async ()=>{
-        if(groupId === null || name===null || code===null )
-        {
-            Alert.alert('Error', 'Enter the data correctly');
-        }
-        else{
-        var checkNull=true;
-        await firebase.database()
-            .ref(`groups/${groupId.toLowerCase()}`)
-            .once("value",snapshot => {
-                if(snapshot.val() != null)
+    const NewGroup =  ()=>{
+        NetInfo.fetch().then(state => {
+            if(state.isConnected){
+                if(groupId === null || name===null || code===null )
                 {
-                    checkNull=false;
+                    Alert.alert('Error', 'Enter the data correctly');
                 }
+                else{
+                var checkNull=true;
+                 firebase.database()
+                    .ref(`groups/${groupId.toLowerCase()}`)
+                    .once("value",snapshot => {
+                        if(snapshot.val() != null)
+                        {
+                            checkNull=false;
+                        }
+                        
+                        
+                    });
                 
-                
-            });
-        
-        if(checkNull == false){
-            Alert.alert('Error', 'This id is used');
-        }
-        else{
+                if(checkNull == false){
+                    Alert.alert('Error', 'This id is used');
+                }
+                else{
+                    
+                    firebase.database().ref(`groups/${groupId.toLowerCase()}`).set({
+                        GroupName: name,
+                        GroupCode: code,
+                    }, 
+                    (error) => {
+                    if (!error) {
+                        NetInfo.fetch().then(state => {
+                            if(state.isConnected){
+                            Alert.alert('Alert', 'your Group is created');
+                            navigation.navigate('groupScreen', {
+                                groupId : groupId.toLowerCase(),
+                                groupCode:code,
+                            })
+                            db.transaction(tx=>{
+                                tx.executeSql("insert into GroupNotes (GroupId , groupCode , groupName) values (?,?,?)", [groupId.toLowerCase() ,code,name]);
             
-             firebase.database().ref(`groups/${groupId.toLowerCase()}`).set({
-                GroupName: name,
-                GroupCode: code,
-            }, 
-            (error) => {
-              if (!error) {
-                  
-                Alert.alert('Alert', 'your Group is created');
-                navigation.navigate('groupScreen', {
-                    groupId : groupId.toLowerCase(),
-                    groupCode:code,
-                })
-                
-              } else {
-                Alert.alert('Alert', 'yanlis var');
-              }
+                            },
+                            null,
+                            console.log("done")
+                            );
+                        }
+                        else{
+                            
+                        }
+
+                        });
+                        
+                        
+                    } else {
+                        Alert.alert('Alert', 'Error');
+                    }
+                    }
+                    ); 
+                }}
+            }else{
+                Alert.alert('Alert', 'Sorry no internet');
             }
-            ); 
-        }}
+        })
     }
 
 
@@ -84,7 +101,7 @@ export default function CreateGroup({navigation}){
                     //errorMessage=
                 />
                 <Button 
-                    onPress={NewGroup  }
+                    onPress={NewGroup }
                     buttonStyle={{
                         backgroundColor:'#2b2e4a',
                         margin:10,

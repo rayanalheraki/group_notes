@@ -1,55 +1,61 @@
 
 import React,{ useState,useEffect} from 'react';
-import { StyleSheet,Text, View, ScrollView} from 'react-native';
+import { StyleSheet,Text, View, ScrollView,Alert} from 'react-native';
 import 'react-native-gesture-handler';
 import { Card, Button, } from 'react-native-elements';
 import firebase from '../firebase-connect/firebaseConf';
+import NetInfo from "@react-native-community/netinfo";
 
+import * as SQLite from 'expo-sqlite';
 
-
+const db = SQLite.openDatabase('groupNotes.db');
 
 export default function GroupScreen({route , navigation}) {
     const { groupId, groupCode } = route.params;
     const [notesPlus , setNotePlus] = useState([]);
     const [notNull , setNotNull] =useState(false)
-    const [count , setCount] =useState(0)
 
     useEffect(() => {
-        setCount(val=> val=val+1)
-        console.log(count,'-------------------------------')
-        
-        const Notes = firebase.database()
-        .ref(`/notes/${groupId}`)
-        .on('value', snapshot => {
-            const myData=snapshot.val();
-            
-            const array=[];
-            if(myData!= null)
-            {
-                const keys = Object.keys(myData);
-                Object.values(myData).map((item,index)=>{
-                    if(keys!==null){
-                        array.push({
-                            id:keys[index],
-                            text:item.noteText,
-                            title:item.noteTitle,
-                        })
+        NetInfo.fetch().then(state => {
+            if(state.isConnected){
+                const Notes = firebase.database()
+                .ref(`/notes/${groupId}`)
+                .on('value', snapshot => {
+                    const myData=snapshot.val();
+                    
+                    const array=[];
+                    if(myData!= null)
+                    {
+                        const keys = Object.keys(myData);
+                        Object.values(myData).map((item,index)=>{
+                            if(keys!==null){
+                                array.push({
+                                    id:keys[index],
+                                    text:item.noteText,
+                                    title:item.noteTitle,
+                                })
+                            }
+                        }
+                        )
+                        setNotePlus(array)
+                        setNotNull(true)
                     }
-                }
-                )
-                setNotePlus(array)
-                setNotNull(true)
-            }
-            else{
-                setNotNull(false)
-            }
-        },[]);
-        return () => firebase.database()
-            .ref(`/notes/${groupId}`)
-            .off('child_added', Notes);
-            
+                    else{
+                        setNotNull(false)
+                    }
+                },[]);
+                return () => firebase.database()
+                    .ref(`/notes/${groupId}`)
+                    .off('child_added', Notes);
+            }else{
+                Alert.alert('No Internet',' sorry try agine later')
+            }}) 
 
     },[]);
+
+
+    
+
 
     return(
         <View style={styles.container}>
@@ -113,16 +119,6 @@ export default function GroupScreen({route , navigation}) {
             
             }
             </ScrollView> 
-
-            {/* <View
-                style={styles.group}
-                onPress={() => alert('This is a button!')}
-                >
-                <Text style={styles.text}>
-                    helllo from HomeScreen
-                    
-                </Text>
-            </View> */}
         </View>
     );
 }
