@@ -9,7 +9,7 @@ import NetInfo from "@react-native-community/netinfo";
 
 import * as SQLite from 'expo-sqlite';
 
-const db = SQLite.openDatabase('groupNotes.db');
+const db = SQLite.openDatabase('Groups.db');
 
 
 export default function CreateGroup({navigation}){
@@ -43,39 +43,32 @@ export default function CreateGroup({navigation}){
                 }
                 else{
                     
-                    firebase.database().ref(`groups/${groupId.toLowerCase()}`).set({
-                        GroupName: name,
-                        GroupCode: code,
-                    }, 
-                    (error) => {
-                    if (!error) {
-                        NetInfo.fetch().then(state => {
-                            if(state.isConnected){
-                            Alert.alert('Alert', 'your Group is created');
-                            navigation.navigate('groupScreen', {
-                                groupId : groupId.toLowerCase(),
-                                groupCode:code,
-                            })
-                            db.transaction(tx=>{
-                                tx.executeSql("insert into GroupNotes (GroupId , groupCode , groupName) values (?,?,?)", [groupId.toLowerCase() ,code,name]);
-            
-                            },
-                            null,
-                            console.log("done")
-                            );
-                        }
-                        else{
+                            firebase.database().ref(`groups/${groupId.toLowerCase()}`).set({
+                                GroupName: name,
+                                GroupCode: code,
+                            }, 
+                            (error) => {
+                            if (!error) {
                             
-                        }
-
-                        });
-                        
-                        
-                    } else {
-                        Alert.alert('Alert', 'Error');
-                    }
-                    }
-                    ); 
+                                Alert.alert('Alert', 'your Group is created');
+                                navigation.navigate('groupScreen', {
+                                    groupId : groupId.toLowerCase(),
+                                    groupCode:code,
+                                })
+                                db.transaction(tx=>{
+                                    tx.executeSql("insert into MyGroups (GroupId , groupCode , groupName) values (?,?,?)", [groupId.toLowerCase() ,code,name]);
+                
+                                },
+                                null,
+                                console.log("done")
+                                );
+                                
+                                
+                            } else {
+                                Alert.alert('Alert', 'Error');
+                            }
+                            }
+                            ); 
                 }}
             }else{
                 Alert.alert('Alert', 'Sorry no internet');

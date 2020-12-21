@@ -1,38 +1,48 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState ,useEffect} from 'react';
-import {StyleSheet, Text,View, ScrollView} from 'react-native';
+import {StyleSheet, Text,View, ScrollView ,Alert} from 'react-native';
 import 'react-native-gesture-handler';
 import { Card, Button } from 'react-native-elements';
 import firebase from '../firebase-connect/firebaseConf';
+
 
 import { useIsFocused } from '@react-navigation/native';
 
 import * as SQLite from 'expo-sqlite';
 
-const db = SQLite.openDatabase('groupNotes.db');
+const db = SQLite.openDatabase('Groups.db');
 
 
 
-export default function HomeScreen({navigation}) {
+export default function     HomeScreen({navigation}) {
     const [items, setItems]= useState([])
     const [notNull , setNotNull] =useState(false)
     const [update, setUpdate]= useState(false)
     const isFocused = useIsFocused();
     useEffect(() => {
+        db.transaction(tx => {
+            tx.executeSql(
+              'create table if not exists MyGroups (id integer primary key not null  , GroupId text NOT NULL UNIQUE ,groupCode text , groupName text);'),
+              null,
+              () => Alert.alert("db created from db",'') ,
+              () => Alert.alert("ERROr",'') 
+          });
+          
+    },[])
+    useEffect(() => {
         
         db.transaction(tx=>{
             tx.executeSql(
-                `SELECT * FROM GroupNotes;`,
+                `SELECT * FROM MyGroups;`,
                 null,
                 (_, { rows: {length, _array } }) => {
-                    if(_array!==null){
+                    if(_array !== null){
+                       // Alert.alert("read from db",JSON.stringify(_array))
                         setNotNull(true)
                         setItems(_array )
-                    }else{
+                    }else if(_array ===null){
                         setNotNull(false)
                     }
-
-                    
                 }
             );
         });
@@ -64,9 +74,6 @@ export default function HomeScreen({navigation}) {
         
     }
     
-    
-
-
     return(
         
         <View style={styles.container}>
@@ -78,7 +85,7 @@ export default function HomeScreen({navigation}) {
             )} */}
             <ScrollView > 
                {
-                items.map((item, index) => (
+                items.map((item) => (
                     
                     <Card key = {item.id} containerStyle={{marginBottom:-10 }}>
                         <Card.Title style={styles.title}>{item.groupName}</Card.Title>
@@ -107,7 +114,7 @@ export default function HomeScreen({navigation}) {
                                 onPress={()=> {
                                     db.transaction(tx=>{
                                         tx.executeSql(
-                                            `DELETE FROM GroupNotes WHERE id=${item.id};`);
+                                            `DELETE FROM MyGroups WHERE id=${item.id};`);
                                     });
                                     if(update===true)
                                     {

@@ -6,10 +6,6 @@ import { Card, Button, } from 'react-native-elements';
 import firebase from '../firebase-connect/firebaseConf';
 import NetInfo from "@react-native-community/netinfo";
 
-import * as SQLite from 'expo-sqlite';
-
-const db = SQLite.openDatabase('groupNotes.db');
-
 export default function GroupScreen({route , navigation}) {
     const { groupId, groupCode } = route.params;
     const [notesPlus , setNotePlus] = useState([]);

@@ -7,7 +7,7 @@ import NetInfo from "@react-native-community/netinfo";
 
 import * as SQLite from 'expo-sqlite';
 
-const db = SQLite.openDatabase('groupNotes.db');
+const db = SQLite.openDatabase('Groups.db');
 
 
 
@@ -31,14 +31,11 @@ export default function JoinGroup({ navigation}){
                                 Alert.alert('Sorry', 'This ID is not used');
                             }else if(snapshot.val()==code)
                             {   
-                                NetInfo.fetch().then(state => {
-                                    if(state.isConnected){
                                 firebase.database()
                                 .ref(`/groups/${groupId.toLowerCase()}/GroupName`)
                                 .once('value', snapshot => {
-                                    console.log('from froup name',snapshot.val())
                                     db.transaction(tx=>{
-                                        tx.executeSql("insert into GroupNotes (GroupId , groupCode , groupName) values (?,?,?)", [groupId.toLowerCase() ,code, snapshot.val()]);
+                                        tx.executeSql("insert into MyGroups (GroupId , groupCode , groupName) values (?,?,?)", [groupId.toLowerCase() ,code, snapshot.val()]);
                                     },
                                     null,
                                     console.log("done"),
@@ -52,7 +49,7 @@ export default function JoinGroup({ navigation}){
                                     groupId : groupId.toLowerCase(),
                                     groupCode:code,
                                 })
-                            }})
+                                  
                             }else if(snapshot.val()!==code){
                                 Alert.alert('Sorry', 'Wrong code');
                             }
