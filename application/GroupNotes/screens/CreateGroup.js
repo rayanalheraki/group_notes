@@ -12,13 +12,12 @@ import * as SQLite from 'expo-sqlite';
 const db = SQLite.openDatabase('Groups.db');
 
 
-export default function CreateGroup({navigation}){
+export default  function CreateGroup({navigation}){
     const [groupId , setGroupId] = useState(null);
     const [name , setName] = useState(null);
     const [code , setCode] = useState(null);
-    
 
-    const NewGroup =  ()=>{
+    const NewGroup =()=>{
         NetInfo.fetch().then(state => {
             if(state.isConnected){
                 if(groupId === null || name===null || code===null )
@@ -26,50 +25,44 @@ export default function CreateGroup({navigation}){
                     Alert.alert('Invalid Inputs', 'Please make sure all fields are filled in');
                 }
                 else{
-                var checkNull=true;
-                 firebase.database()
-                    .ref(`groups/${groupId.toLowerCase()}`)
-                    .once("value",snapshot => {
-                        if(snapshot.val() != null)
+                    const fireb =firebase.database()
+                    .ref(`groups/${groupId.toLowerCase()}`);
+                     
+                    fireb.on("value",snapshot => {
+                        if(snapshot.val() !== null)
                         {
-                            checkNull=false;
+                            Alert.alert('Error', 'This ID is not available');
                         }
-                        
-                        
-                    });
-                
-                if(checkNull == false){
-                    Alert.alert('Error', 'This ID is not available');
-                }
-                else{
-                    
-                            firebase.database().ref(`groups/${groupId.toLowerCase()}`).set({
+                        else{
+                            fireb.set({
                                 GroupName: name,
                                 GroupCode: code,
                             }, 
                             (error) => {
-                            if (!error) {
-                            
-                                Alert.alert('Alert', 'Your group has been created');
-                                navigation.navigate('groupScreen', {
-                                    groupId : groupId.toLowerCase(),
-                                    groupCode:code,
-                                })
-                                db.transaction(tx=>{
-                                    tx.executeSql("insert into MyGroups (GroupId , groupCode , groupName) values (?,?,?)", [groupId.toLowerCase() ,code,name]);
-                
-                                },
-                                null,
-                                console.log("done")
-                                );
-                                
-                                
-                            } else {
-                                Alert.alert('Alert', 'Error');
+                                if (!error) {
+                                    Alert.alert('Alert', 'Your group has been created');
+                                    navigation.navigate('groupScreen', {
+                                        groupId : groupId.toLowerCase(),
+                                        groupCode:code,
+                                    })
+                                    db.transaction(tx=>{
+                                        tx.executeSql("insert into MyGroups (GroupId , groupCode , groupName) values (?,?,?)", [groupId.toLowerCase() ,code,name]);
+                    
+                                    },
+                                    null,
+                                    console.log("done")
+                                    );
+                                    
+                                    
+                                } else {
+                                    Alert.alert('Alert', 'Error');
+                                }
                             }
-                            }
-                            ); 
-                }}
+                            );
+                        }
+                        
+                    });
+                }
             }else{
                 Alert.alert('Alert', 'Please check your internet connection and try again');
             }
