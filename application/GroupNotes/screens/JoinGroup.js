@@ -22,7 +22,7 @@ export default function JoinGroup({ navigation}){
         NetInfo.fetch().then(state => {
             if(state.isConnected){
                 if(groupId=== null || code===null){
-                    Alert.alert('Sorry', 'Please enter the data correctly');
+                    Alert.alert('Invalid Inputs', 'Please make sure all fields are filled in');
                 }else{
                     firebase.database()
                         .ref(`/groups/${groupId.toLowerCase()}/GroupCode`)
@@ -57,7 +57,7 @@ export default function JoinGroup({ navigation}){
                 }
             }else
             {
-                Alert.alert('Alert', 'Sorry no internet');
+                Alert.alert('Alert', 'Please check your internet connection and try again');
 
             }       
         })
@@ -76,7 +76,7 @@ export default function JoinGroup({ navigation}){
             <View style={styles.form}>
 
                 <Input
-                    placeholder='Group Id'
+                    placeholder='Group ID'
                     onChangeText={value => setGroupId(value)}
                 />
                 <Input
@@ -99,7 +99,7 @@ export default function JoinGroup({ navigation}){
                         name:'sign-in',
                         type:'font-awesome',
                     }}
-                    title="Join To Group"
+                    title="Join"
                 />
             </View>
             

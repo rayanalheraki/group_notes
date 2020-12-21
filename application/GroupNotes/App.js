@@ -66,7 +66,7 @@ export default function App() {
           component={HomeScreen}
           options={({ navigation }) => ({
 
-            headerTitle: "Your Group",
+            headerTitle: "Your Groups",
             headerRight: () => (
               <View style={{ flexDirection: "row", justifyContent: "flex-end", marginRight: 15, width: 120 }} >
 
@@ -84,11 +84,11 @@ export default function App() {
           })}
         />
         <Stack.Screen name="newGroup" component={GroupOp} options={() => ({ headerTitle: "New Group" })} />
-        <Stack.Screen name="createGroup" component={CreateGroup} options={() => ({ headerTitle: "Create Group" })} />
-        <Stack.Screen name="joinGroup" component={JoinGroup} options={() => ({ headerTitle: "Join To Group" })} />
-        <Stack.Screen name="groupScreen" component={GroupScreen} options={() => ({ headerTitle: "Group Screen" })} />
-        <Stack.Screen name="note" component={Note} options={() => ({ headerTitle: "New Note Screen" })} />
-        <Stack.Screen name="noteEdit" component={NoteEdit} options={() => ({ headerTitle: "Edit Note Screen" })} />
+        <Stack.Screen name="createGroup" component={CreateGroup} options={() => ({ headerTitle: "Create a Group" })} />
+        <Stack.Screen name="joinGroup" component={JoinGroup} options={() => ({ headerTitle: "Join a Group" })} />
+        <Stack.Screen name="groupScreen" component={GroupScreen} options={() => ({ headerTitle: "Group Page" })} />
+        <Stack.Screen name="note" component={Note} options={() => ({ headerTitle: "New Note" })} />
+        <Stack.Screen name="noteEdit" component={NoteEdit} options={() => ({ headerTitle: "Edit Note" })} />
 
       </Stack.Navigator>
     </NavigationContainer>

@@ -23,7 +23,7 @@ export default function CreateGroup({navigation}){
             if(state.isConnected){
                 if(groupId === null || name===null || code===null )
                 {
-                    Alert.alert('Error', 'Enter the data correctly');
+                    Alert.alert('Invalid Inputs', 'Please make sure all fields are filled in');
                 }
                 else{
                 var checkNull=true;
@@ -39,7 +39,7 @@ export default function CreateGroup({navigation}){
                     });
                 
                 if(checkNull == false){
-                    Alert.alert('Error', 'This id is used');
+                    Alert.alert('Error', 'This ID is not available');
                 }
                 else{
                     
@@ -50,7 +50,7 @@ export default function CreateGroup({navigation}){
                             (error) => {
                             if (!error) {
                             
-                                Alert.alert('Alert', 'your Group is created');
+                                Alert.alert('Alert', 'Your group has been created');
                                 navigation.navigate('groupScreen', {
                                     groupId : groupId.toLowerCase(),
                                     groupCode:code,
@@ -71,7 +71,7 @@ export default function CreateGroup({navigation}){
                             ); 
                 }}
             }else{
-                Alert.alert('Alert', 'Sorry no internet');
+                Alert.alert('Alert', 'Please check your internet connection and try again');
             }
         })
     }
@@ -85,7 +85,7 @@ export default function CreateGroup({navigation}){
                     onChangeText={value => setName(value)}
                 />
                 <Input
-                    placeholder='Group Id'
+                    placeholder='Group ID'
                     onChangeText={value => setGroupId(value)}
                 />
                 <Input
@@ -105,7 +105,7 @@ export default function CreateGroup({navigation}){
                         name:'plus',
                         type:'font-awesome',
                     }}
-                    title="Create New Group"
+                    title="Create"
                 />
             </View>
             

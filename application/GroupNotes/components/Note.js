@@ -49,7 +49,7 @@ export default function Note({route , navigation}) {
             <View style={styles.noteTitle} >
                 <TextInput
                     // style={styles.textArea}
-                    placeholder="Type note title"
+                    placeholder="Title"
                     onChangeText={value => setTitle(value)}
                     editable={true}
                 />
@@ -57,7 +57,7 @@ export default function Note({route , navigation}) {
             <View style={styles.textAreaContainer} >
                 <TextInput
                     style={styles.textArea}
-                    placeholder="Type note text"
+                    placeholder="Content"
                     multiline={true}
                     numberOfLines={20}
                     onChangeText={value => setText(value)}

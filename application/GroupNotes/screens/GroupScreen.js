@@ -74,7 +74,7 @@ export default function GroupScreen({route , navigation}) {
                         name:'sticky-note',
                         type:'font-awesome',
                     }}
-                    title="  Add New Note  "
+                    title="  Add a New Note  "
                 />
             <ScrollView > 
                

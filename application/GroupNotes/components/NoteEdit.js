@@ -33,13 +33,13 @@ export default function Note({route , navigation}) {
         firebase.database().ref().update(updates)
 
         navigation.goBack();
-        Alert.alert('Done','Note was saved')
+        Alert.alert('Done','Note has been saved')
     }
 
     const DeleteNote = ()=>{
         firebase.database().ref(`/notes/${groupId}/${noteId}/`).remove()
         navigation.goBack();
-        Alert.alert('Done','Note was deleted')
+        Alert.alert('Done','Note has been deleted')
     } 
 
     return(
@@ -48,7 +48,7 @@ export default function Note({route , navigation}) {
             <View style={styles.noteTitle} >
                 <TextInput
                     // style={styles.textArea}
-                    placeholder="Type note title"
+                    placeholder="Title"
                     value={title}
                     onChangeText={value => setTitle(value)}
                     editable={true}
@@ -57,7 +57,7 @@ export default function Note({route , navigation}) {
             <View style={styles.textAreaContainer} >
                 <TextInput
                     style={styles.textArea}
-                    placeholder="Type note text"
+                    placeholder="Content"
                     multiline={true}
                     numberOfLines={20}
                     value={text}

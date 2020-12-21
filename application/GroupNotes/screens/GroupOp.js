@@ -20,7 +20,7 @@ export default function GroupOp ({ navigation }){
                     name:'plus',
                     type:'font-awesome',
                 }}
-                title="Create New Group"
+                title="Create a Group"
             />
             <Button
                 onPress={()=>navigation.navigate('joinGroup') }
@@ -36,7 +36,7 @@ export default function GroupOp ({ navigation }){
                     name:'sign-in',
                     type:'font-awesome',
                 }}
-                title="Join To Group"
+                title="Join a Group"
             />
         </View>       
     );
