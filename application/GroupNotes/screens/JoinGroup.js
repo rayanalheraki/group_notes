@@ -28,7 +28,7 @@ export default function JoinGroup({ navigation}){
                         .ref(`/groups/${groupId.toLowerCase()}/GroupCode`)
                         .on('value', snapshot => {
                             if(snapshot.val()=== null){
-                                Alert.alert('Sorry', 'This ID is not used');
+                                Alert.alert('Error', 'This ID is not available, please try another one');
                             }else if(snapshot.val()==code)
                             {   
                                 firebase.database()

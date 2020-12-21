@@ -31,7 +31,7 @@ export default  function CreateGroup({navigation}){
                     fireb.on("value",snapshot => {
                         if(snapshot.val() !== null)
                         {
-                            Alert.alert('Error', 'This ID is not available');
+                            Alert.alert('Error', 'This ID is not available, please try another one');
                         }
                         else{
                             fireb.set({
