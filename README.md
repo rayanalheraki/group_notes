@@ -1,7 +1,10 @@
 # Group Notes
-Easily organize and manage your notes.<br />
-### TODO:
-Write and format readme file
+An Android application that helps you create, organize,  manage and share notes in groups with other users.<br />
+### Content:
+- [App Directory](https://github.com/rayanalheraki/group_notes/tree/main/application/GroupNotes)
+- [Screenshots](https://github.com/rayanalheraki/group_notes/tree/main/screenshots)
+- [Test Scenarios](https://github.com/rayanalheraki/group_notes/blob/main/test_scenarios/test_scenarios.md)
+- [UX](https://github.com/rayanalheraki/group_notes/tree/main/UX)
 
 ### Authors
 * **Rayan Alheraki**
