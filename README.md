@@ -5,6 +5,7 @@ An Android application that helps you create, organize,  manage and share notes 
 - [Screenshots](https://github.com/rayanalheraki/group_notes/tree/main/screenshots)
 - [Test Scenarios](https://github.com/rayanalheraki/group_notes/blob/main/test_scenarios/test_scenarios.md)
 - [UX](https://github.com/rayanalheraki/group_notes/tree/main/UX)
+- [NoSQL DB Diagram](https://github.com/rayanalheraki/group_notes/blob/main/noSql-db-diyagrami/groupNotesDB.png)
 
 ### Authors
 * **Rayan Alheraki**
