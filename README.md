@@ -1,5 +1,5 @@
 # Group Notes
-An Android application that helps you create, organize,  manage and share notes in groups with other users.<br />
+An Android application to help you create, organize,  manage and share notes in groups with other users.<br />
 ### Content
 - [App Directory](https://github.com/rayanalheraki/group_notes/tree/main/application/GroupNotes)
 - [Screenshots](https://github.com/rayanalheraki/group_notes/tree/main/screenshots)
